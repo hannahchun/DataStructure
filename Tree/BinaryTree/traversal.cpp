@@ -6,7 +6,7 @@ class node {
     public :
         string name;
         double score;
-        node *left, *right;
+        node *left, *right, *link;
         void set_data(string s, double n);
 };
 
@@ -27,11 +27,27 @@ class my_tree {
         void print_data_inorder();
         void print_data_preorder();
         void print_data_postorder();
+        void print_data_levelorder(); //level order 구현 
 };
 
 my_tree::my_tree() {
     node_count = 0;
     root = NULL;
+}
+
+// node의 포인터 타입을 저장하는 queue 생성
+class my_queue {
+    node *front, *rear;
+    public :
+        my_queue();
+        void insert_q(node *t);
+        node* delete_q();
+        bool is_q_empty();
+};
+
+my_queue::my_queue() {
+    front=NULL;
+    rear=NULL;
 }
 
 // root node 설정
@@ -150,6 +166,60 @@ void my_tree::print_data_postorder() {
     postorder_print(root);
 }
 
+void my_queue::insert_q(node *t) {
+    node *p;
+    p = new node;
+    p = t;
+    p->link = NULL;
+    if (rear != NULL)
+        rear->link = p;
+    else
+        front = p;
+    rear = p;
+}
+
+node* my_queue::delete_q() {
+    if (!is_q_empty()) {
+        node *p = front;
+        node *t = front;
+        front = front->link;
+        delete t;
+        if (front == NULL)
+            rear = NULL;
+        return p;
+    }
+    else {
+        printf("Queue is empty\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+bool my_queue::is_q_empty() {
+    if (front == NULL)
+        return true;
+    else
+        return false;
+}
+
+// level order traversal
+void my_tree::print_data_levelorder() {
+    my_queue a1;
+    node *t;
+    if (root == NULL)
+        return;
+    a1.insert_q(root);
+    while(1) {
+        if (a1.is_q_empty())
+            return;
+        t = a1.delete_q();
+        cout<<t->name<<":"<<t->score<<"\n";
+        if (t->left != NULL)
+            a1.insert_q(t->left);
+        if (t->right != NULL)
+            a1.insert_q(t->right);
+    }
+}
+
 int main() {
     my_tree thetree;
     node tmp;
@@ -180,6 +250,9 @@ int main() {
 
     cout<<"\nPostorder Traversal Result \n"; 
     thetree.print_data_postorder();
+
+    cout<<"\nLevel order Traversal Result \n";
+    thetree.print_data_levelorder();
 
     return 0;
 }
