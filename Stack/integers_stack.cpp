@@ -9,14 +9,14 @@ class my_stack {
     int top;
 
     public :
-        void init();
+        my_stack();
         void push(int x);
         int pop();
         bool stack_full();
         bool stack_empty();
 };
 
-void my_stack::init() {
+my_stack::my_stack() {
     top = 0;
 }
 
@@ -54,8 +54,6 @@ bool my_stack::stack_empty() {
 
 int main() {
     my_stack s1;
-    
-    s1.init();
 
     int list[5] = { 32, 123, 27, 131, 242 }, i, x;
 
